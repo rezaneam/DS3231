@@ -14,6 +14,8 @@ class DS3231
 {
 public:
     bool Initialize(TwoWire &_wire = Wire);
+    time_t GetTime();
+    void SetTime(const time_t &time);
 
 private:
     const uint8_t address = 0x68;
@@ -23,4 +25,8 @@ private:
     uint8_t read(uint8_t _register);
     void write(uint8_t _register, const uint8_t &value);
     void write(uint8_t _register, const uint8_t &value, const uint8_t &mask);
+
+    uint8_t uint2bcd(uint8_t int_val);
+    uint8_t bcd2uint(int8_t bcd_val);
+    uint8_t bcd2uint24Hour(uint8_t bcdHour);
 };
