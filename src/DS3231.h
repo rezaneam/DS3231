@@ -14,7 +14,8 @@ class DS3231
 {
 public:
     bool Initialize(TwoWire &_wire = Wire);
-    time_t GetTime();
+    void GetTime(time_t *time);
+    void GetTime(tm *time);
     void SetTime(const time_t &time);
 
 private:

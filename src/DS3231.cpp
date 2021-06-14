@@ -12,20 +12,33 @@ bool DS3231::Initialize(TwoWire &_wire)
     return (read(DS3231_REG_STATUS) != 0xFF);
 }
 
-time_t DS3231::GetTime()
+void DS3231::GetTime(time_t *time)
 {
-    tm time = tm();
+    tm time_tm = tm();
     uint8_t buffer[7] = {0};
     read(DS3231_REG_TIMEDATE, 7, buffer);
-    time.tm_sec = bcd2uint(buffer[0]);
-    time.tm_min = bcd2uint(buffer[1]);
-    time.tm_hour = bcd2uint24Hour(buffer[2]);
-    time.tm_wday = buffer[3];
-    time.tm_mday = bcd2uint(buffer[4]);
-    time.tm_mon = bcd2uint(buffer[5]);
-    time.tm_year = bcd2uint(buffer[6]) + 100;
+    time_tm.tm_sec = bcd2uint(buffer[0]);
+    time_tm.tm_min = bcd2uint(buffer[1]);
+    time_tm.tm_hour = bcd2uint24Hour(buffer[2]);
+    time_tm.tm_wday = buffer[3];
+    time_tm.tm_mday = bcd2uint(buffer[4]);
+    time_tm.tm_mon = bcd2uint(buffer[5]);
+    time_tm.tm_year = bcd2uint(buffer[6]) + 2000;
 
-    return mktime(&time);
+    *time = mktime(&time_tm);
+}
+
+void DS3231::GetTime(tm *time)
+{
+    uint8_t buffer[7] = {0};
+    read(DS3231_REG_TIMEDATE, 7, buffer);
+    time->tm_sec = bcd2uint(buffer[0]);
+    time->tm_min = bcd2uint(buffer[1]);
+    time->tm_hour = bcd2uint24Hour(buffer[2]);
+    time->tm_wday = buffer[3];
+    time->tm_mday = bcd2uint(buffer[4]);
+    time->tm_mon = bcd2uint(buffer[5]);
+    time->tm_year = bcd2uint(buffer[6]) + 2000;
 }
 
 // Private methods
