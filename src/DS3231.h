@@ -17,6 +17,9 @@ public:
     void GetTime(time_t *time);
     void GetTime(tm *time);
     void SetTime(const time_t &time);
+    void SetTime(const tm &time);
+    bool HasValidDateTime();
+    bool IsRunning();
 
 private:
     const uint8_t address = 0x68;

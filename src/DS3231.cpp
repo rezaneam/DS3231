@@ -41,6 +41,28 @@ void DS3231::GetTime(tm *time)
     time->tm_year = bcd2uint(buffer[6]) + 2000;
 }
 
+void DS3231::SetTime(const tm &time)
+{
+    write(DS3231_REG_TIMEDATE, uint2bcd(time.tm_sec));
+    write(DS3231_REG_TIMEDATE + 1, uint2bcd(time.tm_min));
+    write(DS3231_REG_TIMEDATE + 2, uint2bcd(time.tm_hour));
+    write(DS3231_REG_TIMEDATE + 4, uint2bcd(time.tm_mday));
+    write(DS3231_REG_TIMEDATE + 5, uint2bcd(time.tm_mon + 1));    // Month in tm factor starts with 0 (Jan)
+    write(DS3231_REG_TIMEDATE + 6, uint2bcd(time.tm_year - 100)); // Year has 1900 as offset
+    uint8_t val = read(DS3231_REG_STATUS);
+    write(DS3231_REG_STATUS, val & 0x7F); // Indicate that the time is set
+}
+
+bool DS3231::HasValidDateTime()
+{
+    return !(read(DS3231_REG_STATUS) & 0x80);
+}
+
+bool DS3231::IsRunning()
+{
+    return !(read(DS3231_REG_CONTROL) & 0x80);
+}
+
 // Private methods
 void DS3231::read(uint8_t _register, uint8_t length, uint8_t *values)
 {
