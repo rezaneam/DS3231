@@ -1,9 +1,9 @@
 #include <DS3231.h>
 
 /*!
- *  @brief  Initializing the libary with auto address detect
+ *  @brief  Initializing the libary
  *  @param  _wire TwoWire interface - defalt Wire
- *  @return true if any BMA400 sensor found
+ *  @return true if any DS3231 sensor found
  */
 bool DS3231::Initialize(TwoWire &_wire)
 {
